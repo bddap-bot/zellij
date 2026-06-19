@@ -1271,6 +1271,8 @@ pub struct OverrideLayoutPayload {
     pub retain_existing_plugin_panes: bool,
     #[prost(bool, tag="5")]
     pub apply_only_to_active_tab: bool,
+    #[prost(uint32, repeated, tag="6")]
+    pub pane_id_ordering: ::prost::alloc::vec::Vec<u32>,
 }
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]

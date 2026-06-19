@@ -2895,6 +2895,7 @@ fn test_override_layout_basic_with_both_tiled_and_floating() {
             HashMap::new(),
             retain_existing_terminal_panes,
             retain_existing_plugin_panes,
+            Vec::new(),
             1,
         )
         .unwrap();
@@ -3038,6 +3039,7 @@ fn test_override_layout_hide_floating_panes_true() {
             HashMap::new(),
             retain_existing_terminal_panes,
             retain_existing_plugin_panes,
+            Vec::new(),
             1,
         )
         .unwrap();
@@ -3167,6 +3169,7 @@ fn test_override_layout_show_floating_panes() {
             HashMap::new(),
             retain_existing_terminal_panes,
             retain_existing_plugin_panes,
+            Vec::new(),
             1,
         )
         .unwrap();
@@ -3293,6 +3296,7 @@ fn test_override_tiled_exact_match_preservation_commands() {
             &mut HashMap::new(),
             false,
             false,
+            Vec::new(),
             1,
         )
         .unwrap();
@@ -3421,6 +3425,7 @@ fn test_override_tiled_exact_match_preservation_plugins() {
             &mut HashMap::new(),
             false,
             false,
+            Vec::new(),
             1,
         )
         .unwrap();
@@ -3553,6 +3558,7 @@ fn test_override_tiled_all_panes_closed_no_matches() {
             &mut HashMap::new(),
             false,
             false,
+            Vec::new(),
             1,
         )
         .unwrap();
@@ -3677,6 +3683,7 @@ fn test_override_tiled_mixed_some_matches_some_new() {
             &mut HashMap::new(),
             false,
             false,
+            Vec::new(),
             1,
         )
         .unwrap();
@@ -3797,6 +3804,7 @@ fn test_override_tiled_new_panes_for_unmatched_positions() {
             &mut HashMap::new(),
             false,
             false,
+            Vec::new(),
             1,
         )
         .unwrap();
@@ -3907,6 +3915,7 @@ fn test_override_tiled_focus_on_new_pane() {
             &mut HashMap::new(),
             false,
             false,
+            Vec::new(),
             1,
         )
         .unwrap();
@@ -4021,6 +4030,7 @@ fn test_override_tiled_focus_when_focused_pane_closed() {
             &mut HashMap::new(),
             false,
             false,
+            Vec::new(),
             1,
         )
         .unwrap();
@@ -4142,6 +4152,7 @@ fn test_override_tiled_empty_layout_closes_all() {
             &mut HashMap::new(),
             false,
             false,
+            Vec::new(),
             1,
         )
         .unwrap();
@@ -5240,6 +5251,7 @@ fn test_override_full_tiled_and_floating_together() {
             &mut HashMap::new(),
             false,
             false,
+            Vec::new(),
             1,
         )
         .unwrap();
@@ -5373,6 +5385,7 @@ fn test_override_viewport_adjustment_with_borderless() {
             &mut HashMap::new(),
             false,
             false,
+            Vec::new(),
             1,
         )
         .unwrap();
@@ -5498,6 +5511,7 @@ fn test_override_tiled_retain_terminal_panes_partial_match() {
             &mut HashMap::new(),
             true, // retain_existing_terminal_panes
             false,
+            Vec::new(),
             1,
         )
         .unwrap();
@@ -5633,6 +5647,7 @@ fn test_override_tiled_retain_terminal_panes_no_matches() {
             &mut HashMap::new(),
             true, // retain_existing_terminal_panes
             false,
+            Vec::new(),
             1,
         )
         .unwrap();
@@ -6116,6 +6131,7 @@ fn test_override_mixed_retain_terminal_panes_both_tiled_and_floating() {
             HashMap::new(),
             retain_existing_terminal_panes,
             retain_existing_plugin_panes,
+            Vec::new(),
             1,
         )
         .unwrap();
@@ -6261,6 +6277,7 @@ fn test_override_retain_terminal_but_close_plugin_panes() {
             &mut HashMap::new(),
             true, // retain_existing_terminal_panes
             false,
+            Vec::new(),
             1,
         )
         .unwrap();
@@ -6423,6 +6440,7 @@ fn test_override_tiled_retain_plugin_panes_partial_match() {
             &mut HashMap::new(),
             false,
             true,
+            Vec::new(),
             1,
         )
         .unwrap();
@@ -6576,6 +6594,7 @@ fn test_override_tiled_retain_plugin_panes_no_matches() {
             &mut override_plugin_ids,
             false,
             true,
+            Vec::new(),
             1,
         )
         .unwrap();
@@ -7042,6 +7061,7 @@ fn test_override_mixed_retain_plugin_panes_both_tiled_and_floating() {
             override_plugin_ids,
             retain_existing_terminal_panes,
             retain_existing_plugin_panes,
+            Vec::new(),
             1,
         )
         .unwrap();
@@ -7173,6 +7193,7 @@ fn test_override_retain_plugin_but_close_terminal_panes() {
             &mut HashMap::new(),
             false,
             true,
+            Vec::new(),
             1,
         )
         .unwrap();

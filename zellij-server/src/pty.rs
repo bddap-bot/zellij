@@ -83,6 +83,7 @@ pub enum PtyInstruction {
         Vec<(TabLayoutInfo, HashMap<RunPluginOrAlias, Vec<u32>>)>, // (layout, plugin_ids) per tab
         bool,                                                      // retain_existing_terminal_panes
         bool,                                                      // retain_existing_plugin_panes
+        Vec<u32>, // pane_id_ordering: i-th terminal pane id -> i-th leaf slot (empty = default)
         ClientId,
         Option<NotificationEnd>,
     ),
@@ -528,6 +529,7 @@ pub(crate) fn pty_thread_main(mut pty: Pty, layout: Box<Layout>) -> Result<()> {
                 tab_layouts_with_plugin_ids,
                 retain_existing_terminal_panes,
                 retain_existing_plugin_panes,
+                pane_id_ordering,
                 client_id,
                 completion_tx,
             ) => {
@@ -551,7 +553,12 @@ pub(crate) fn pty_thread_main(mut pty: Pty, layout: Box<Layout>) -> Result<()> {
                         retain_existing_terminal_panes,
                         retain_existing_plugin_panes,
                     ) {
-                        Ok(tab_result) => all_tab_results.push(tab_result),
+                        Ok(mut tab_result) => {
+                            // The plugin's per-slot ordering targets the active tab; carry
+                            // it through to the override step (empty for the default path).
+                            tab_result.pane_id_ordering = pane_id_ordering.clone();
+                            all_tab_results.push(tab_result);
+                        },
                         Err(e) => {
                             log::error!(
                                 "Failed to spawn terminals for tab {}: {:?}",
@@ -1497,6 +1504,8 @@ impl Pty {
             new_terminal_pids: new_tab_pane_ids,
             new_floating_pane_pids: new_tab_floating_pane_ids,
             plugin_ids,
+            // set by the PtyInstruction::OverrideLayout handler (default path: empty)
+            pane_id_ordering: Vec::new(),
         };
 
         let mut terminals_to_start = vec![];

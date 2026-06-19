@@ -106,6 +106,7 @@ pub enum PluginInstruction {
         Vec<TabLayoutInfo>,     // layouts for each tab
         bool,                   // retain_existing_terminal_panes
         bool,                   // retain_existing_plugin_panes
+        Vec<u32>,               // pane_id_ordering: i-th terminal pane id -> i-th leaf slot (empty = default)
         ClientId,
         Option<NotificationEnd>,
     ),
@@ -635,6 +636,7 @@ pub(crate) fn plugin_thread_main(
                 tab_layouts,
                 retain_existing_terminal_panes,
                 retain_existing_plugin_panes,
+                pane_id_ordering,
                 client_id,
                 completion_tx,
             ) => {
@@ -719,6 +721,7 @@ pub(crate) fn plugin_thread_main(
                     tab_layouts_with_plugin_ids,
                     retain_existing_terminal_panes,
                     retain_existing_plugin_panes,
+                    pane_id_ordering,
                     client_id,
                     completion_tx,
                 )));

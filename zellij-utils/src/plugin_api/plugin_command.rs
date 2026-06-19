@@ -1732,6 +1732,7 @@ impl TryFrom<ProtobufPluginCommand> for PluginCommand {
                         override_layout_payload.retain_existing_plugin_panes,
                         override_layout_payload.apply_only_to_active_tab,
                         context,
+                        override_layout_payload.pane_id_ordering,
                     ))
                 },
                 _ => Err("Mismatched payload for OverrideLayout"),
@@ -3584,6 +3585,7 @@ impl TryFrom<PluginCommand> for ProtobufPluginCommand {
                 retain_existing_plugin_panes,
                 apply_only_to_active_tab,
                 context,
+                pane_id_ordering,
             ) => Ok(ProtobufPluginCommand {
                 name: CommandName::OverrideLayout as i32,
                 payload: Some(Payload::OverrideLayoutPayload(OverrideLayoutPayload {
@@ -3595,6 +3597,7 @@ impl TryFrom<PluginCommand> for ProtobufPluginCommand {
                     retain_existing_terminal_panes,
                     retain_existing_plugin_panes,
                     apply_only_to_active_tab,
+                    pane_id_ordering,
                 })),
             }),
             PluginCommand::SaveLayout {

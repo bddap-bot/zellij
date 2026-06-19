@@ -421,6 +421,10 @@ pub enum Action {
         retain_existing_terminal_panes: bool,
         retain_existing_plugin_panes: bool,
         apply_only_to_active_tab: bool,
+        /// Optional explicit ordering of terminal pane ids: the i-th id is bound to
+        /// the i-th leaf slot of the applied layout. Empty preserves the default
+        /// (pane-id / logical-position) binding order.
+        pane_id_ordering: Vec<u32>,
     },
     /// Query all tab names
     QueryTabNames,
@@ -1787,6 +1791,8 @@ impl Action {
                     retain_existing_terminal_panes,
                     retain_existing_plugin_panes,
                     apply_only_to_active_tab,
+                    // the CLI override-layout entrypoint has no per-slot pane ordering
+                    pane_id_ordering: Vec::new(),
                 }])
             },
             CliAction::QueryTabNames => Ok(vec![Action::QueryTabNames]),

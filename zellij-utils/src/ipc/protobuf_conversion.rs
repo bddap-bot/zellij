@@ -1484,6 +1484,9 @@ impl From<crate::input::actions::Action>
                 retain_existing_terminal_panes,
                 retain_existing_plugin_panes,
                 apply_only_to_active_tab,
+                // not expressible over the CLI/IPC action contract; plugins set it
+                // via the plugin-command path (PluginCommand::OverrideLayout).
+                pane_id_ordering: _,
             } => ActionType::OverrideLayout(OverrideLayoutAction {
                 tabs: tabs.into_iter().map(|t| t.into()).collect(),
                 retain_existing_terminal_panes,
@@ -2355,6 +2358,8 @@ impl TryFrom<crate::client_server_contract::client_server_contract::Action>
                     retain_existing_plugin_panes: override_layout_action
                         .retain_existing_plugin_panes,
                     apply_only_to_active_tab: override_layout_action.apply_only_to_active_tab,
+                    // not carried by the CLI/IPC action contract (see encode side)
+                    pane_id_ordering: Vec::new(),
                 })
             },
             ActionType::QueryTabNames(_) => Ok(crate::input::actions::Action::QueryTabNames),

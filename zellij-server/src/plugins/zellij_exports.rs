@@ -275,6 +275,7 @@ fn host_run_plugin_command(mut caller: Caller<'_, PluginEnv>) {
                         retain_existing_plugin_panes,
                         apply_only_to_active_tab,
                         context,
+                        pane_id_ordering,
                     ) => override_layout(
                         env,
                         layout_info,
@@ -282,6 +283,7 @@ fn host_run_plugin_command(mut caller: Caller<'_, PluginEnv>) {
                         retain_existing_plugin_panes,
                         apply_only_to_active_tab,
                         context,
+                        pane_id_ordering,
                     )?,
                     PluginCommand::SaveLayout {
                         layout_name,
@@ -5309,6 +5311,7 @@ fn override_layout(
     retain_existing_plugin_panes: bool,
     apply_only_to_active_tab: bool,
     context: BTreeMap<String, String>,
+    pane_id_ordering: Vec<u32>,
 ) -> Result<()> {
     let layout = Layout::from_layout_info(&env.layout_dir, layout_info)
         .map_err(|e| anyhow!("Failed to parse layout: {:?}", e))?;
@@ -5348,6 +5351,7 @@ fn override_layout(
         retain_existing_terminal_panes,
         retain_existing_plugin_panes,
         apply_only_to_active_tab,
+        pane_id_ordering,
     };
     run_action(env, action, context);
     Ok(())

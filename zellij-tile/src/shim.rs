@@ -2814,12 +2814,38 @@ pub fn override_layout<L: AsRef<LayoutInfo>>(
     apply_only_to_active_tab: bool,
     context: BTreeMap<String, String>,
 ) {
+    override_layout_with_pane_ordering(
+        layout_info,
+        retain_existing_terminal_panes,
+        retain_existing_plugin_panes,
+        apply_only_to_active_tab,
+        context,
+        Vec::new(),
+    );
+}
+
+/// Like [`override_layout`], but binds specific retained terminal panes to specific
+/// layout leaf slots: `pane_id_ordering[i]` is placed in the i-th leaf slot (in the
+/// layout's flattened order), letting the plugin choose which pane occupies each
+/// slot rather than accepting zellij's default (pane-id) order. Ids are terminal
+/// pane ids (the bare `id` from `PaneInfo`, not the `terminal_<id>` form). Ids the
+/// tab doesn't have are ignored; an empty ordering behaves exactly like
+/// [`override_layout`]. Only meaningful with `retain_existing_terminal_panes = true`.
+pub fn override_layout_with_pane_ordering<L: AsRef<LayoutInfo>>(
+    layout_info: L,
+    retain_existing_terminal_panes: bool,
+    retain_existing_plugin_panes: bool,
+    apply_only_to_active_tab: bool,
+    context: BTreeMap<String, String>,
+    pane_id_ordering: Vec<u32>,
+) {
     let plugin_command = PluginCommand::OverrideLayout(
         layout_info.as_ref().clone(),
         retain_existing_terminal_panes,
         retain_existing_plugin_panes,
         apply_only_to_active_tab,
         context,
+        pane_id_ordering,
     );
     let protobuf_plugin_command: ProtobufPluginCommand = plugin_command.try_into().unwrap();
     object_to_stdout(&protobuf_plugin_command.encode_to_vec());

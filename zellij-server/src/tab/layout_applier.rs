@@ -134,6 +134,7 @@ impl<'a> LayoutApplier<'a> {
         mut new_plugin_ids: HashMap<RunPluginOrAlias, Vec<u32>>,
         retain_existing_terminal_panes: bool,
         retain_existing_plugin_panes: bool,
+        pane_id_ordering: Vec<u32>,
         client_id: ClientId,
     ) -> Result<bool> {
         // true => should_show_floating_panes
@@ -144,6 +145,7 @@ impl<'a> LayoutApplier<'a> {
             &mut new_plugin_ids,
             retain_existing_terminal_panes,
             retain_existing_plugin_panes,
+            pane_id_ordering,
             client_id,
         )?;
 
@@ -239,11 +241,23 @@ impl<'a> LayoutApplier<'a> {
         mut new_plugin_ids: &mut HashMap<RunPluginOrAlias, Vec<u32>>,
         retain_existing_terminal_panes: bool,
         retain_existing_plugin_panes: bool,
+        pane_id_ordering: Vec<u32>,
         client_id: ClientId,
     ) -> Result<()> {
         let positions_in_layout = self.flatten_layout(tiled_panes_layout, false)?;
 
         let mut existing_tab_state = ExistingTabState::new(self.tiled_panes.drain());
+
+        // A plugin may request an explicit pane->slot binding: the i-th listed
+        // terminal pane id should land in the i-th flattened leaf slot. Slots are
+        // filled by walking the flattened layout in order and pulling retained panes
+        // in `pane_candidates()` order, which sorts by (logical_position, id). Plain
+        // shells share an equal logical_position, so that order collapses to pane-id
+        // order and the plugin can't choose. Rewriting each listed pane's
+        // logical_position to its index makes the candidate order match the
+        // requested ordering exactly, so the binding falls out of the existing path
+        // with no special-casing downstream. Empty ordering = stock behavior.
+        existing_tab_state.apply_pane_id_ordering(&pane_id_ordering);
 
         let mut pane_applier = PaneApplier::new(
             &mut self.tiled_panes,
@@ -1133,6 +1147,22 @@ struct ExistingTabState {
 impl ExistingTabState {
     pub fn new(existing_panes: BTreeMap<PaneId, Box<dyn Pane>>) -> Self {
         ExistingTabState { existing_panes }
+    }
+    /// Stamp each listed terminal pane's `logical_position` with its index in the
+    /// ordering. Binding pulls retained panes in `pane_candidates()` order — sorted
+    /// by (logical_position, id) — and assigns them to the layout's leaf slots in
+    /// flattened order. Distinct ascending logical_positions make that pane order
+    /// equal the requested ordering, so `ordering[i]` fills the i-th flattened slot.
+    /// (Which slot is visually dominant is the layout's business, not the binding's.)
+    /// Ids not present are left untouched; an empty ordering is a no-op (stock).
+    pub fn apply_pane_id_ordering(&mut self, ordering: &[u32]) {
+        for (index, terminal_id) in ordering.iter().enumerate() {
+            if let Some(pane) = self.existing_panes.get_mut(&PaneId::Terminal(*terminal_id)) {
+                let mut geom = pane.position_and_size();
+                geom.logical_position = Some(index);
+                pane.set_geom(geom);
+            }
+        }
     }
     pub fn find_and_extract_exact_match_pane(
         &mut self,

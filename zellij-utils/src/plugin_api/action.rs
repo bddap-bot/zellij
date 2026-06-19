@@ -798,6 +798,7 @@ impl TryFrom<ProtobufAction> for Action {
                         retain_existing_terminal_panes: payload.retain_existing_terminal_panes,
                         retain_existing_plugin_panes: payload.retain_existing_plugin_panes,
                         apply_only_to_active_tab: payload.apply_only_to_active_tab,
+                        pane_id_ordering: payload.pane_id_ordering,
                     })
                 },
                 Some(_) => Err("Mismatched payload for OverrideLayout"),
@@ -1687,6 +1688,7 @@ impl TryFrom<Action> for ProtobufAction {
                 retain_existing_terminal_panes,
                 retain_existing_plugin_panes,
                 apply_only_to_active_tab,
+                pane_id_ordering,
             } => Ok(ProtobufAction {
                 name: ProtobufActionName::OverrideLayout as i32,
                 optional_payload: Some(OptionalPayload::OverrideLayoutPayload(
@@ -1698,6 +1700,7 @@ impl TryFrom<Action> for ProtobufAction {
                         retain_existing_terminal_panes,
                         retain_existing_plugin_panes,
                         apply_only_to_active_tab,
+                        pane_id_ordering,
                     },
                 )),
             }),

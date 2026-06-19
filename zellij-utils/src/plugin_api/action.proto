@@ -184,6 +184,9 @@ message OverrideLayoutPayload {
   bool retain_existing_terminal_panes = 2;
   bool retain_existing_plugin_panes = 3;
   bool apply_only_to_active_tab = 4;
+  // Optional explicit ordering of terminal pane ids: the i-th id is bound to the
+  // i-th leaf slot of the applied layout (see plugin_command.proto).
+  repeated uint32 pane_id_ordering = 5;
 }
 
 message Action {

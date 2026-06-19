@@ -962,6 +962,7 @@ impl Tab {
         new_plugin_ids: HashMap<RunPluginOrAlias, Vec<u32>>,
         retain_existing_terminal_panes: bool,
         retain_existing_plugin_panes: bool,
+        pane_id_ordering: Vec<u32>,
         client_id: ClientId,
         blocking_terminal: Option<(u32, NotificationEnd)>,
     ) -> Result<()> {
@@ -1004,6 +1005,7 @@ impl Tab {
             new_plugin_ids,
             retain_existing_terminal_panes,
             retain_existing_plugin_panes,
+            pane_id_ordering,
             client_id,
         ) {
             Ok(should_show_floating_panes) => {

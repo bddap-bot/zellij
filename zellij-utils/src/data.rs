@@ -3565,6 +3565,7 @@ pub enum PluginCommand {
         bool,                     // retain_existing_plugin_panes
         bool,                     // apply_only_to_active_tab,
         BTreeMap<String, String>, // context
+        Vec<u32>,                 // pane_id_ordering: i-th terminal pane id -> i-th leaf slot (empty = default order)
     ),
     SaveLayout {
         layout_name: String,

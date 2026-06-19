@@ -1274,6 +1274,7 @@ pub(crate) fn route_action(
             retain_existing_terminal_panes,
             retain_existing_plugin_panes,
             apply_only_to_active_tab,
+            pane_id_ordering,
         } => {
             let cwd = None;
             let shell = default_shell.clone();
@@ -1286,6 +1287,7 @@ pub(crate) fn route_action(
                     retain_existing_terminal_panes,
                     retain_existing_plugin_panes,
                     apply_only_to_active_tab,
+                    pane_id_ordering,
                     client_id,
                     Some(NotificationEnd::new(completion_tx)),
                 ))

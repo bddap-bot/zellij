@@ -315,6 +315,9 @@ pub struct TabOverrideResult {
     pub new_terminal_pids: Vec<(u32, HoldForCommand)>,
     pub new_floating_pane_pids: Vec<(u32, HoldForCommand)>,
     pub plugin_ids: HashMap<RunPluginOrAlias, Vec<u32>>,
+    // Explicit binding of retained terminal panes to leaf slots: the i-th id is
+    // bound to the i-th slot. Empty = zellij's default (logical-position/id) order.
+    pub pane_id_ordering: Vec<u32>,
 }
 
 /// Instructions that can be sent to the [`Screen`].
@@ -588,6 +591,7 @@ pub enum ScreenInstruction {
         bool,                   // retain_existing_terminal_panes
         bool,                   // retain_existing_plugin_panes
         bool,                   // apply_only_to_focused_tab
+        Vec<u32>,               // pane_id_ordering: i-th terminal pane id -> i-th leaf slot (empty = default)
         ClientId,
         Option<NotificationEnd>,
     ),
@@ -8160,6 +8164,7 @@ pub(crate) fn screen_thread_main(
                 retain_existing_terminal_panes,
                 retain_existing_plugin_panes,
                 apply_only_to_focused_tab,
+                pane_id_ordering,
                 client_id,
                 completion_tx,
             ) => {
@@ -8268,6 +8273,7 @@ pub(crate) fn screen_thread_main(
                         processed_tab_layouts,
                         retain_existing_terminal_panes,
                         retain_existing_plugin_panes,
+                        pane_id_ordering,
                         client_id,
                         completion_tx,
                     ))?;
@@ -8299,6 +8305,7 @@ pub(crate) fn screen_thread_main(
                             tab_result.plugin_ids,
                             retain_existing_terminal_panes,
                             retain_existing_plugin_panes,
+                            tab_result.pane_id_ordering,
                             client_id,
                             None,
                         ) {
@@ -8340,6 +8347,8 @@ pub(crate) fn screen_thread_main(
                                 tab_result.plugin_ids,
                                 retain_existing_terminal_panes,
                                 retain_existing_plugin_panes,
+                                // freshly-created tab: nothing retained to bind
+                                Vec::new(),
                                 client_id,
                                 None,
                             ) {

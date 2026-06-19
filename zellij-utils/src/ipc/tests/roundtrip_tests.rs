@@ -2151,6 +2151,7 @@ fn test_client_messages() {
             retain_existing_terminal_panes: false,
             retain_existing_plugin_panes: false,
             apply_only_to_active_tab: false,
+            pane_id_ordering: Vec::new(),
         },
         terminal_id: Some(1),
         client_id: Some(100),

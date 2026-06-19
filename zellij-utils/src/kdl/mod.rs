@@ -1815,6 +1815,8 @@ impl TryFrom<(&KdlNode, &Options)> for Action {
                         retain_existing_terminal_panes: false,
                         retain_existing_plugin_panes: false,
                         apply_only_to_active_tab: false,
+                        // per-slot pane ordering is a plugin-only concept (not KDL)
+                        pane_id_ordering: Vec::new(),
                     });
                 }
 
@@ -1902,6 +1904,8 @@ impl TryFrom<(&KdlNode, &Options)> for Action {
                         retain_existing_terminal_panes,
                         retain_existing_plugin_panes,
                         apply_only_to_active_tab,
+                        // per-slot pane ordering is a plugin-only concept (not KDL)
+                        pane_id_ordering: Vec::new(),
                     })
                 } else {
                     let (layout, floating_panes_layout) = layout.new_tab();
@@ -1920,6 +1924,8 @@ impl TryFrom<(&KdlNode, &Options)> for Action {
                         retain_existing_terminal_panes,
                         retain_existing_plugin_panes,
                         apply_only_to_active_tab,
+                        // per-slot pane ordering is a plugin-only concept (not KDL)
+                        pane_id_ordering: Vec::new(),
                     })
                 }
             },

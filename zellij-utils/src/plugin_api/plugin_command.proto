@@ -958,6 +958,10 @@ message OverrideLayoutPayload {
   bool retain_existing_terminal_panes = 3;
   bool retain_existing_plugin_panes = 4;
   bool apply_only_to_active_tab = 5;
+  // Optional explicit ordering of terminal pane ids. When non-empty, the i-th id
+  // is bound to the i-th leaf slot of the layout, letting a plugin choose which
+  // retained pane occupies which slot instead of zellij's default pane-id order.
+  repeated uint32 pane_id_ordering = 6;
 }
 
 message SaveLayoutPayload {
