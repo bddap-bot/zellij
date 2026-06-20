@@ -4301,10 +4301,14 @@ impl Screen {
     /// subscribed to the given event type.
     fn targeted_plugin_ids(&self, client_id: ClientId, event_type: EventType) -> Vec<PluginId> {
         let mut plugin_ids = Vec::new();
-        // Active-tab plugins
+        // Active-tab plugins, including suppressed (self-hidden) ones — a hidden
+        // plugin that subscribed to this event (e.g. a re-tiler reacting to focus
+        // changes) must still be reached; without this it goes deaf the moment it
+        // calls hide_self(). Per-plugin subscription filtering downstream keeps this
+        // from waking plugins that did not subscribe.
         if let Some(active_tab_id) = self.active_tab_ids.get(&client_id) {
             if let Some(tab) = self.tabs.get(active_tab_id) {
-                plugin_ids.extend(tab.get_plugin_ids());
+                plugin_ids.extend(tab.get_all_plugin_ids());
             }
         }
         // Background plugins subscribed to this event type

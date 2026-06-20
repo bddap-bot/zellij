@@ -3966,6 +3966,21 @@ impl Tab {
             })
             .collect()
     }
+    /// Every plugin id in this tab, including suppressed (hidden) ones. A plugin that
+    /// called `hide_self()` lives in `suppressed_panes` and so is absent from
+    /// `get_plugin_ids()`; it must still receive the events it subscribed to (e.g. a
+    /// background re-tiler reacting to focus/pane changes), so state broadcasts target
+    /// this set. Per-plugin subscription filtering still applies downstream, so a
+    /// suppressed plugin that did not subscribe is not woken.
+    pub fn get_all_plugin_ids(&self) -> Vec<PluginId> {
+        self.get_all_pane_ids()
+            .into_iter()
+            .filter_map(|pane_id| match pane_id {
+                PaneId::Plugin(pid) => Some(pid),
+                _ => None,
+            })
+            .collect()
+    }
     pub fn get_pane_info(&self, pane_id: PaneId) -> Option<PaneInfo> {
         let current_pane_group: HashMap<ClientId, Vec<PaneId>> =
             { self.current_pane_group.borrow().clone_inner() };
